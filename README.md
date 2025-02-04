@@ -3,6 +3,8 @@
 ## Resources
 
 -   Hugo, static site framework: https://gohugo.io/
+-   https://www.markdownguide.org/cheat-sheet/
+-   https://docs.python.org/3/library/unittest.html
 
 ## How This Works
 
@@ -46,3 +48,4 @@
 
 -   shell script created (main.sh) in order to run the code more easily from
     command line.
+-   shell script created (test.sh) to run tests more easily from command line
