@@ -49,3 +49,9 @@
 -   shell script created (main.sh) in order to run the code more easily from
     command line.
 -   shell script created (test.sh) to run tests more easily from command line
+
+## Observations:
+
+-   simple tests are best. I am noticing that once I test the format of an
+    attribute, and how its string renders, then there is no point in adding
+    attributes in further test cases

@@ -14,27 +14,38 @@ class HTMLNode():
         # Dictionary; key-value pairs representing the attributes for the tag of this instance
         self.props = props
 
+        # Validating Input Values:
+        if type(self.tag) != str and self.tag != None:
+            raise ValueError("Tag argument must be a string value")
+        if type(self.value) != str and self.value != None:
+            raise ValueError("Value argument must be a string value")
+        if type(self.children) != list and self.children != None:
+            raise ValueError("Children argument must be a list")
+        if type(self.props) != dict and self.props != None:
+            raise ValueError("Props argument must be a dictionary")
+        
+
     def to_html(self):
         raise NotImplementedError
     
-    def props_to_html(self):        
+    def props_to_html(self):                
         if self.props is None:
             return ""
         
-        prop_string = ""
+        prop_string = " "
         
         for key, value in self.props.items():
-            prop_string += f' {key}="{value}"'
+            prop_string += f'{key}="{value}" '
         
-        return f"{prop_string} "
+        return f"{prop_string}"
     
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"
 
 class LeafNode(HTMLNode):
-    def __init__(self, tag=None, value=None, props=None):
-        super().__init__(tag, value)
-        self.props = props
+    def __init__(self, tag, value, props=None):
+        # A mistake I made, was not putting in None for the children parameter, and just put 'props'. What occurred was the props initialized with an instance were actually passed in as the value for the children.
+        super().__init__(tag, value, None, props)
 
         if self.tag == "img" or self.tag == "image":
             self.validate_image_tag()
@@ -48,18 +59,46 @@ class LeafNode(HTMLNode):
 
     def to_html(self):
 
-        if self.value is None and self.tag is not "img":
+        #Image tags don't have values as they are self-closing; but all other Leafs require values
+        if self.value is None and self.tag != "img":
             raise ValueError("LeafNode must have a value")
         
+        # If tag is none, then even if props are erroneously present, they don't need to be rendered because there is no tag within which to render them. 
         if self.tag is None:
             return self.value
         
         attributes = self.props_to_html()
         
         if self.tag == "img":
-            return f"<img {attributes} />"
+            return f"<img {attributes}/>"
         
         return f"<{self.tag}{attributes}>{self.value}</{self.tag}>"
 
     def __repr__(self):
         return f"LeafNode({self.tag}, {self.value}, {self.props})"
+
+
+class ParentNode(HTMLNode):
+    def __init__(self, tag=None, children=None, props=None):
+        
+        super().__init__(tag, None, children, props)
+        if not self.tag:
+            raise ValueError("Tag is required")
+        
+        if not self.children:
+            raise ValueError("Children are required")
+
+        if not isinstance(self.children, list): 
+            raise ValueError("Children argument must be a list")
+
+    def to_html(self):
+        el_string = f"<{self.tag}{self.props_to_html()}>"
+        for i in range(len(self.children)):
+                child_el = self.children[i]
+                child_el_string = child_el.to_html()
+                el_string += child_el_string
+                
+        return f"{el_string}</{self.tag}>"
+
+    def __repr__(self):
+        return f"ParentNode({self.tag}, {self.children}, {self.props})"
