@@ -1,4 +1,4 @@
-from textnode import TextType, TextNode, text_node_to_html_node
+from textnode import TextType, TextNode, text_node_to_html_node, split_nodes_delimiter
 from htmlnode import HTMLNode, LeafNode
 from mock_markdown import test_text
 
@@ -16,6 +16,10 @@ def main():
     # print(img_leaf3.to_html())
 
     # image_node = text_node_to_html_node(TextNode("", "image", "url"))
+
+    test_text_node = TextNode("This is text with a **bolded phrase** in the middle", "text")
+
+    split_nodes_delimiter([test_text_node], "**", "bold")
 
 
 if __name__ == "__main__":

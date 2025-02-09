@@ -1,6 +1,8 @@
 import unittest
 
-from textnode import TextNode, TextType, text_node_to_html_node
+from src.textnode import TextNode, TextType, text_node_to_html_node
+
+from src.inline_markdown import split_nodes_delimiter
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
         node = TextNode("This is a text node", TextType.BOLD)
@@ -109,7 +111,6 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
         with self.assertRaises(ValueError) as missing_url:
             text_node_to_html_node(invalid_image_src)
         self.assertEqual(str(missing_url.exception), "Url is required for images")
-
 
 if __name__ == "__main__":
     unittest.main()

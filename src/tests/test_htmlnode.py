@@ -1,10 +1,9 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode, ParentNode
+from src.htmlnode import HTMLNode, LeafNode, ParentNode
 
 class TestHTMLNode(unittest.TestCase):
     def test_values(self):
-        print("testing values")
         node = HTMLNode("div", "Hi there", None, {"class": "greeting", "href": "https://boot.dev"})
 
         self.assertEqual(node.tag, "div")
