@@ -1,26 +1,67 @@
-from textnode import TextType, TextNode, text_node_to_html_node, split_nodes_delimiter
-from htmlnode import HTMLNode, LeafNode
-from mock_markdown import test_text
-
-test_text_list = test_text.split("\n")
-
+from src.textnode import TextNode, TextType
+import re
 def main():
     print("Main running...")
-    p_leaf = LeafNode("p", "Hello World", {"class": "hello"})
-    # print(p_leaf.to_html())
+    def find_md_images(text):
+        md_image_pattern_with_title = r'!\[([^\[\]]*)\]\(([^\(\)]*)\)'
 
-    a_leaf = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
-    # print(a_leaf.to_html())
+        return re.findall(md_image_pattern_with_title, text)
+    def split_nodes_images(old_nodes):
+        if type(old_nodes) != list:
+            raise ValueError("argument must be a list")
+        
+        if len(old_nodes) == 0:
+            raise ValueError("argument is an empty list")
+        
+        new_nodes = []
 
-    img_leaf3 = LeafNode('image', None, {"src": "/images"})
-    # print(img_leaf3.to_html())
+        for node in old_nodes:
 
-    # image_node = text_node_to_html_node(TextNode("", "image", "url"))
+            if not isinstance(node, TextNode):
+                raise ValueError(f"Item \"{node}\" must be an instance of TextNode")
 
-    test_text_node = TextNode("This is text with a **bolded phrase** in the middle", "text")
+            node_text = node.text
+            image_data = find_md_images(node_text)
 
-    split_nodes_delimiter([test_text_node], "**", "bold")
+            if len(image_data) == 0:
+                new_nodes.append(TextNode(node_text, TextType.TEXT))
+                continue
 
+            for i in range(len(image_data)):
+                alt_text = image_data[i][0]
+                url = image_data[i][1]
+
+                split = node_text.split(f"![{alt_text}]({url})", 1)
+
+                print(split)
+
+                if url.find('"') != -1:
+                    url = url.split(' "')[0]
+                
+                if url.find("'") != -1:
+                    url = url.split(" '")[0]
+
+                text_node = TextNode(split[0], TextType.TEXT)
+                new_nodes.append(text_node)
+
+                image_node = TextNode(alt_text, TextType.IMAGE, url)
+                new_nodes.append(image_node)
+
+                if i == len(image_data) - 1:
+                    text_node = TextNode(split[1], TextType.TEXT)
+                    new_nodes.append(text_node)
+                    continue
+
+                node_text = split[1]           
+
+        return  new_nodes
+
+    one_image_node = TextNode(
+                "Here is a ![Sample Image1](images/sample1-image.jpg \"testing\"). And here is the last sentence.",
+                TextType.TEXT,
+    )
+
+    result = split_nodes_images([one_image_node])
 
 if __name__ == "__main__":
     main()

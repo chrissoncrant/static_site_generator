@@ -4,7 +4,8 @@
 
 -   Hugo, static site framework: https://gohugo.io/
 -   https://www.markdownguide.org/cheat-sheet/
--   https://docs.python.org/3/library/unittest.html
+-   Unittest: https://docs.python.org/3/library/unittest.html
+-   Regex: https://docs.python.org/3/library/re.html
 
 ## How This Works
 
@@ -61,33 +62,3 @@
 -   simple tests are best. I am noticing that once I test the format of an
     attribute, and how its string renders, then there is no point in adding
     attributes in further test cases
-
-### Brainstorming split_nodes_delimiter function.
-
-#### Special Cases
-
--   when a delimiter is used by itself, without a closing delimiter. Example:
-    "This \*line only has one asterisk"
-    -   Do I need to worry about this? When someone is converting Markdown, it
-        is implied that these symbols have special use cases. Also, these can be
-        escaped using \
--   A TextNode is a single string. This can be multiple sentences long. These
-    are broken up by new lines, \n.
--   Is this function to be applied to all TextNodes? If so, then there should be
-    a check to determine if the delimiter is present.
-
-I need a recursive function that will deal with splits...
-
--   The Stopping Case: a string with no more opening delimiters.
-    -   once found it will:
-
-### Tests To Create:
-
--   veriy text nodes without delimiters get added right away
--   verify splitting occurs correctly for:
-    -   bold
-    -   italicized
-    -   code
-    -   multiple instances of a delimiter in one fragment
--   verify that what is returned is a list
--   verify that what is each item in returned list is a TextNode
