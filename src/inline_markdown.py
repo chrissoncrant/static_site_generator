@@ -58,7 +58,6 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                 new_nodes.append(text_node)
     return new_nodes
 
-#These functions take a string and extract the links or images using regex and return a list of tuples with the data needed for creating TextNodes.
 def find_md_links(text):
     if type(text) != str:
         raise ValueError("argument must be a string")

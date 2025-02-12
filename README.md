@@ -1,20 +1,17 @@
 # Static Site Generator Project
 
 ## Resources
-
 -   Hugo, static site framework: https://gohugo.io/
 -   https://www.markdownguide.org/cheat-sheet/
 -   Unittest: https://docs.python.org/3/library/unittest.html
 -   Regex: https://docs.python.org/3/library/re.html
 
 ## How This Works
-
 -   Converting Markdown to HTML
 -   Our static site generator will take a directory of Markdown files (one for
     each web page), and build a directory of HTML files.
 
 ### Flow
-
 -   Markdown files are in the /content directory. A template.html file is in the
     root of the project
 -   The static site generator (the Python code in src/) reads the Markdown files
@@ -28,7 +25,10 @@
     site
 
 ### How the Generator Works
-
+-   It will assume valid Markdown to parse:
+    -   Blocks are separated by two lines; lines separated by one line will be
+        considered part of the same block.
+    -   excessive spaces in the middle of single lines will not be altered.
 -   Delete everything in /public directory
 -   Copy static site assets (HTML template, images, CSS, etc.) to the /public
     directory.
@@ -46,19 +46,16 @@
         directory
 
 ## Project Details
-
 -   shell script created (main.sh) in order to run the code more easily from
     command line.
 -   shell script created (test.sh) to run tests more easily from command line
 
 ## Future Improvements:
-
 -   ability to parse multiple levels of inline nesting; currently only one level
-    is allowed for. Example: "This is an _italic and **bold** word_." is not
+    is allowed for. Example: "This is an *italic sentence with a **bold** word in it*."
     will only parse at the italic level.
 
 ## Observations:
-
 -   simple tests are best. I am noticing that once I test the format of an
     attribute, and how its string renders, then there is no point in adding
     attributes in further test cases
