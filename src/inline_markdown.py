@@ -49,11 +49,13 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
         for i in range(len(split_text)):
             if i % 2:
-                delimited_node = TextNode(split_text[i], text_type)
-                new_nodes.append(delimited_node)
-                continue
-            text_node = TextNode(split_text[i], TextType.TEXT)
-            new_nodes.append(text_node)
+                if split_text[i] != "":
+                    delimited_node = TextNode(split_text[i], text_type)
+                    new_nodes.append(delimited_node)
+                    continue
+            if split_text[i] != "":        
+                text_node = TextNode(split_text[i], TextType.TEXT)
+                new_nodes.append(text_node)
     return new_nodes
 
 #These functions take a string and extract the links or images using regex and return a list of tuples with the data needed for creating TextNodes.
@@ -85,6 +87,10 @@ def split_nodes_images(old_nodes):
 
         if not isinstance(node, TextNode):
             raise ValueError(f"Item \"{node}\" must be an instance of TextNode")
+
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
 
         node_text = node.text
         image_data = find_md_images(node_text)
@@ -135,6 +141,10 @@ def split_nodes_links(old_nodes):
         if not isinstance(node, TextNode):
             raise ValueError(f"Item \"{node}\" must be an instance of TextNode")
         
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+        
         node_text = node.text
         link_data = find_md_links(node_text)
 
@@ -164,3 +174,23 @@ def split_nodes_links(old_nodes):
             node_text = split[1]
 
     return new_nodes
+
+def text_to_textnodes(text):
+    if type(text) != str:
+        raise ValueError("argument must be a string")
+    
+    if text == "":
+        raise ValueError("argument must not be an empty string")
+
+    node_list = [TextNode(text, TextType.TEXT)]
+    # print(node_list)
+
+    parsed_for_bold = split_nodes_delimiter(node_list, "**", TextType.BOLD)
+    # print(bold)
+    parsed_for_italic = split_nodes_delimiter(parsed_for_bold, "*", TextType.ITALIC)
+    parsed_for_code = split_nodes_delimiter(parsed_for_italic, "`", TextType.CODE)
+
+    parsed_for_images = split_nodes_images(parsed_for_code)
+    parsed_for_links = split_nodes_links(parsed_for_images)
+    
+    return parsed_for_links

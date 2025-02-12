@@ -1,10 +1,10 @@
 import unittest
 
-from src.inline_markdown import split_nodes_delimiter, find_md_images, find_md_links, split_nodes_images, split_nodes_links
+from src.inline_markdown import split_nodes_delimiter, find_md_images, find_md_links, split_nodes_images, split_nodes_links, text_to_textnodes
 
 from src.textnode import TextType, TextNode
 
-class TestInlineSplit(unittest.TestCase):
+class TestSplitDelimiter(unittest.TestCase):
     def test_input_value_errors(self):
         test_node = TextNode("I am text", "text")
         
@@ -31,18 +31,20 @@ class TestInlineSplit(unittest.TestCase):
     def test_splitting(self):
         test_plain = TextNode("plain text, no delimiters", TextType.TEXT)
         test_non_text = TextNode("not of TextType.TEXT", TextType.BOLD)
+        test_lone_word = TextNode("**bold**", TextType.TEXT)
         test_bold = TextNode("Testing node with **bold section** in the middle.", TextType.TEXT)
         test_multiple_bold = TextNode("Testing node with **bold section** in the middle. And **another bold** section.", TextType.TEXT)
         test_italic = TextNode("Testing node with *italic section* in the middle.", TextType.TEXT)
         test_code = TextNode("Testing node with `code section` in the middle.", TextType.TEXT)
-
-        test_node_list = [test_plain, test_non_text, test_bold, test_multiple_bold, test_italic, test_code]
 
         plain_result = split_nodes_delimiter([test_plain], "**", TextType.BOLD)
         self.assertListEqual([TextNode("plain text, no delimiters", "text", None)], plain_result)
 
         non_text_result = split_nodes_delimiter([test_non_text], "**", TextType.BOLD)
         self.assertListEqual([TextNode("not of TextType.TEXT", "bold", None)], non_text_result)
+
+        lone_word_result = split_nodes_delimiter([test_lone_word], "**", TextType.BOLD)
+        self.assertListEqual(lone_word_result, [TextNode("bold", "bold", None)])
 
         bold_result = split_nodes_delimiter([test_bold], "**", "bold")
         correct_bold_result = [
@@ -102,7 +104,6 @@ class TestLinkAndImageMarkdownParse(unittest.TestCase):
         image_list = find_md_images(test_text)
 
         self.assertListEqual(image_list, [('Sample Image', 'images/sample-image.jpg "testing"')])
-
 
 class TestImageSplit(unittest.TestCase):
     def test_input_errors(self):
@@ -180,6 +181,10 @@ class TestImageSplit(unittest.TestCase):
             TextNode(". And here is the last sentence.", "text", None)
         ]
         self.assertListEqual(result, correct_result)
+
+        code_node = TextNode("I am code", TextType.CODE, None)
+        result = split_nodes_images([code_node])
+        self.assertListEqual(result, [TextNode("I am code", TextType.CODE, None)])
 
 class TestLinkSplit(unittest.TestCase):
     def test_input_errors(self):
@@ -259,3 +264,36 @@ class TestLinkSplit(unittest.TestCase):
             TextNode(" in the middle.", "text", None)
         ]
         self.assertListEqual(result, correct_result)
+
+        code_node = TextNode("I am code", TextType.CODE, None)
+        result = split_nodes_links([code_node])
+        self.assertListEqual(result, [TextNode("I am code", TextType.CODE, None)])
+
+class TestFullInlineSplit(unittest.TestCase):
+    def test_input_errors(self):
+        with self.assertRaises(ValueError) as invalid_input:
+            text_to_textnodes([])
+        self.assertEqual(str(invalid_input.exception), "argument must be a string")   
+        
+        with self.assertRaises(ValueError) as invalid_input:
+            text_to_textnodes("")
+        self.assertEqual(str(invalid_input.exception), "argument must not be an empty string")
+
+    def test_values(self):
+        test_text = "**This** is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        result = text_to_textnodes(test_text)
+        correct_result = [
+            TextNode("This", "bold", None), 
+            TextNode(" is ", "text", None),
+            TextNode("text", "bold", None), 
+            TextNode(" with an ", "text", None), 
+            TextNode("italic", "italic", None), 
+            TextNode(" word and a ", "text", None), 
+            TextNode("code block", "code", None), 
+            TextNode(" and an ", "text", None), 
+            TextNode("obi wan image", "image", "https://i.imgur.com/fJRm4Vk.jpeg"), 
+            TextNode(" and a ", "text", None), 
+            TextNode("link", "link", "https://boot.dev")
+        ]
+        self.assertListEqual(result, correct_result)
+
