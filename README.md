@@ -23,12 +23,25 @@
     http://localhost:8888 (local machine)
 -   We open a browser and navigate to http://localhost:8888 to view the rendered
     site
-
-### How the Generator Works
--   It will assume valid Markdown to parse:
+-   It will assume valid Markdown Parsing:
     -   Blocks are separated by two lines; lines separated by one line will be
         considered part of the same block.
     -   excessive spaces in the middle of single lines will not be altered.
+-   Supported Inline Markdown Parsing:
+    -   italics
+    -   bold
+    -   code
+    -   images
+    -   links
+-   Supported Block Markdown Parsing:
+    -   paragraph
+    -   heading
+    -   code
+    -   quote
+    -   list (ordered and unordered)
+
+
+### How the Generator Works
 -   Delete everything in /public directory
 -   Copy static site assets (HTML template, images, CSS, etc.) to the /public
     directory.
@@ -59,3 +72,52 @@
 -   simple tests are best. I am noticing that once I test the format of an
     attribute, and how its string renders, then there is no point in adding
     attributes in further test cases
+
+
+## Thoughts
+paragraph seems to be the last item, as in if the pattern does not match anything, then return "paragraph"
+
+for headings:
+the first string sequence must be # and no longer than 6 characters long.
+- can split by space
+The Rules for valid Headings:
+A valid heading can have # characters in its text content, as long as they're not at the beginning of a new line. Whitespace doesn't count as valid characters between newlines and the #. So "# Heading 1\n  #Not a heading" is invalid and should return paragraph
+Valid headings can span multiple lines.
+If I split by the first space, then all characters in the first sequence must be "#" because invalid input types:
+Edge Cases:"#"
+"# "
+"# "
+"####### Heading"
+"# Heading\nMore text"
+"# Heading\n# Another heading"
+"# Heading\nThis # is just text"
+"# Heading\n # This starts with a space"
+"# Heading\n\n# Another"
+"# Heading\n\n# Another"
+"#Heading\n#########some text"
+
+Unordered Lists:
+first character is either "*" or "-"
+All lines following this must start with "-" or "*".
+- can split be space
+
+Ordered Lists:
+first ch is a "1."
+All lines following this must start with a number incremented by 1 followed by a .
+- can split by space
+How to check for increments?
+First split by space and check first character is "1."
+Split by new line. Loop through and verify that first character of each item in list is larger that previous ch by one. Need to convert to number to verify.
+
+Code blocks:
+start and end with 3 backticks. So can slice the string by first 3 and last 3 characters to determine if its valid code
+string[0:3] == "```"
+string[-3:] == "```"
+
+Quote blocks:
+first character must be ">". 
+All lines following this must start with ">".
+
+
+
+
