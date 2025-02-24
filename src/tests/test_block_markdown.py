@@ -39,10 +39,6 @@ class TestMarkdownToBlocks(unittest.TestCase):
         self.assertListEqual(result, correct_result)
 
 class TestBlockToBlockType(unittest.TestCase):
-    def test_input(self):
-        with self.assertRaises(ValueError) as invalid_input:
-            block_to_block_type([])
-        self.assertEqual(str(invalid_input.exception), "argument must be a string")
 
     def test_code_blocks(self):
         block1 = '```python\ndef add(x, y):    # This is a function\n    return x + y\n```'

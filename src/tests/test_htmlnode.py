@@ -4,15 +4,20 @@ from src.htmlnode import HTMLNode, LeafNode, ParentNode
 
 class TestHTMLNode(unittest.TestCase):
     def test_values(self):
-        node = HTMLNode("div", "Hi there", None, {"class": "greeting", "href": "https://boot.dev"})
+        node1 = HTMLNode("div", "Hi there", None, {"class": "greeting", "href": "https://boot.dev"})
 
-        self.assertEqual(node.tag, "div")
+        node2 = HTMLNode("meta", None, None, {
+            "charset": "utf-8"
+        })
+        self.assertEqual(node1.tag, "div")
 
-        self.assertEqual(node.value, "Hi there")
+        self.assertEqual(node1.value, "Hi there")
 
-        self.assertEqual(node.children, None)
+        self.assertEqual(node1.children, None)
 
-        self.assertEqual(node.props, {"class": "greeting", "href": "https://boot.dev"})
+        self.assertEqual(node1.props, {"class": "greeting", "href": "https://boot.dev"})
+
+        self.assertEqual(node2.to_html(), '<meta charset="utf-8"  />')
     
     def test_value_type_exceptions(self):
         with self.assertRaises(ValueError) as invalid_tag_value:
@@ -44,7 +49,7 @@ class TestHTMLNode(unittest.TestCase):
 
     def test_exception(self):
         with self.assertRaises(NotImplementedError):
-            HTMLNode().to_html()
+            HTMLNode("bad_tag").to_html()
 
     def test_repr(self):
         node = HTMLNode("h1", "I am a Title", props={"class":"header", "id": "main-header"})
@@ -90,6 +95,11 @@ class TestHTMLNode(unittest.TestCase):
         self.assertEqual(str(no_child_err_message.exception), "Children are required")
 
     def test_parent_html_string(self):
+        #HTML Parent
+        html_parent = ParentNode("html", [LeafNode(None, "some text")])
+
+        self.assertEqual(html_parent.to_html(), '<!DOCTYPE html><html>some text</html>')
+        
         #Basic Parent:
         children_list = [
             LeafNode("b", "Bold text"),

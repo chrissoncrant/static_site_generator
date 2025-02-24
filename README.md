@@ -14,7 +14,7 @@
 ### Flow
 -   Markdown files are in the /content directory. A template.html file is in the
     root of the project
--   The static site generator (the Python code in src/) reads the Markdown files
+-   The static site generator (the Python code in src/) reads the Markdown files 
     and the template file
 -   The generator converts the Markdown files to a final HTML file for each page
     and writes them to the /public directory
@@ -25,7 +25,7 @@
     site
 -   It will assume valid Markdown Parsing:
     -   Blocks are separated by two lines; lines separated by one line will be
-        considered part of the same block.
+        considered part of the same block. This will lead to problems if, for example, a paragraph is separated by a heading only by a single line.
     -   excessive spaces in the middle of single lines will not be altered.
 -   Supported Inline Markdown Parsing:
     -   italics
@@ -49,8 +49,7 @@
     -   Open the file and read its contents
     -   Split the MD into "blocks" (paragraphs, headings, lists, etc.)
     -   Convert each block into a tree of HTMLNode objects. So for inline
-        elements (bold, links/anchors, etc) we will convert in this manner: Raw
-        MD -> TextNode -> HTMLNode
+        elements (bold, links/anchors, etc) we will convert in this manner: Raw MD -> TextNode -> HTMLNode
     -   Join all the HTMLNode blocks under one large parent HTMLNode for the
         pages
     -   Use recursive `to_html()` method to convert HTMLNode and its nested
@@ -64,60 +63,99 @@
 -   shell script created (test.sh) to run tests more easily from command line
 
 ## Future Improvements:
--   ability to parse multiple levels of inline nesting; currently only one level
-    is allowed for. Example: "This is an *italic sentence with a **bold** word in it*."
-    will only parse at the italic level.
+-   ability to parse multiple levels of inline nesting; currently only one level is allowed for. Example: "This is an *italic sentence with a **bold** word in it*." will only parse at the italic level.
+- Add functionality for other inline textnodes, such as inline quotes.
+-   Ability to handle cases where different block items (a heading and paragraph, for example) are only separated by a single newline character
+-   Ability to set Code Block type (py, etc), currently if those characters are included, they will be included in the text in the rendered html.
 
 ## Observations:
--   simple tests are best. I am noticing that once I test the format of an
-    attribute, and how its string renders, then there is no point in adding
-    attributes in further test cases
+-   simple tests are best. I am noticing that once I test the format of an attribute, and how its string renders, then there is no point in adding attributes in further test cases
 
 
-## Thoughts
-paragraph seems to be the last item, as in if the pattern does not match anything, then return "paragraph"
+###################################################
+###################################################
 
-for headings:
-the first string sequence must be # and no longer than 6 characters long.
-- can split by space
-The Rules for valid Headings:
-A valid heading can have # characters in its text content, as long as they're not at the beginning of a new line. Whitespace doesn't count as valid characters between newlines and the #. So "# Heading 1\n  #Not a heading" is invalid and should return paragraph
-Valid headings can span multiple lines.
-If I split by the first space, then all characters in the first sequence must be "#" because invalid input types:
-Edge Cases:"#"
-"# "
-"# "
-"####### Heading"
-"# Heading\nMore text"
-"# Heading\n# Another heading"
-"# Heading\nThis # is just text"
-"# Heading\n # This starts with a space"
-"# Heading\n\n# Another"
-"# Heading\n\n# Another"
-"#Heading\n#########some text"
+## Markdown to HTMLNode:
+Based on the block type we can determine what kind of parent block is needed.
 
-Unordered Lists:
-first character is either "*" or "-"
-All lines following this must start with "-" or "*".
-- can split be space
+### HTML Node review:
+- Parents: requires a tag, requires children as a list (these can be parents and leafs); these do not have values
+- Leafs: require a value unless image; has tags, but not required. Example of Leaf without a tag would be a paragraph.
 
-Ordered Lists:
-first ch is a "1."
-All lines following this must start with a number incremented by 1 followed by a .
-- can split by space
-How to check for increments?
-First split by space and check first character is "1."
-Split by new line. Loop through and verify that first character of each item in list is larger that previous ch by one. Need to convert to number to verify.
+### TextNodes
+text, bold, italics, code, links, images
 
-Code blocks:
-start and end with 3 backticks. So can slice the string by first 3 and last 3 characters to determine if its valid code
-string[0:3] == "```"
-string[-3:] == "```"
+### My Questions
+Need some function to extract the actual text from the block level markdown (extracting the heading text from the md string which starts with "#')
 
-Quote blocks:
-first character must be ">". 
-All lines following this must start with ">".
+Need to create the children list to pass into the overall ParentNode, which would then run the .to_html() on that to generate the html.
 
+### I notice:
+block_markdown imports from nowhere (yet)
+inline_markdown imports from textnode
+textnode only uses leafnodes
+htmlnode doesn't import from anywhere
 
+### Block Level Elements
+Entire Document gets nested in <html> Parent HTMLNode
 
+Paragraphs: <p> Parent HTMLNode --> LeafNodes --> TextNodes
+- Paragraphs are separated by double \n
+- If a plain string is only separated by a single \n, it still goes into a single paragraph element
+    - Need a function to replace \n with &NewLine; and then add `style="white-space: pre-line"` property.
+
+Headings: <h{1-6}> Parent HTMLNode --> LeafNodes --> TextNodes
+
+Block Code: <code> Parent HTMLNode --> <pre> Parent HTMLNode --> LeafNodes --> TextNodes
+
+Quotes: <blockquote> Parent HTMLNode --> <p> Parent HTMLNode --> LeafNode --> TextNodes 
+
+Ordered Lists: <ol> Parent HTMLNode --> <li> Parent HTMLNode --> LeafNodes --> TextNodes
+
+Unordered Lists: <ul> Parent HTMLNode --> <li> Parent HTMLNode --> LeafNodes --> TextNodes
+
+______________
+block_markdown.md
+markdown_to_blocks()
+block_to_block_type() 
+extract text from the block symbol (if needed; headings, lists, code, quotes)
+
+inlinemarkdown.md
+text_to_textnodes() which will convert input string to a TextNode List, run TextNode list through the split_nodes_delimiter for bold, italic, code, run the new list through imaging and link parsing and return a new list of TextNodes.
+
+textnode.md
+text_node_to_html_node() must run each of the nodes in the returned list through this function and return a new list of LeafNodes. This list will be the child list for the relevant ParentNode.
+
+htmlnode.md
+ParentNode(tag, children, props)
+    - tag and children are required.
+Create ParentNode based on the block type, which determines the tag, and using the returned list as the children argument
+
+Append ParentNode to the child_list
+
+return ParentNode("html", child_list)
+
+### Directory Manipulation
+- Copy contents from source directory, "static", into "public" directory
+    - first, verify both directories exist
+    - Recursivley:
+        - delete all files in "static" directory
+        - copy files from public into "static"
+
+Recursive Function for Deleting content of public:
+- check if the current item at the path is a file or directory
+- If file: delete
+- If directory: remove the whole directory
+
+Copying Files:
+- verify the source path exists
+- if it exists, get the list of all the files adn directories
+- check if public exists
+- if public doesn't exist, create it
+- if public does exist:
+    - clear public directory
+    - iterate through all paths in static
+    - store the current parent directory name.
+    - if item at path is a file copy it over to public using the parent directory
+    - if item is a directory, run the copy files using the current parent directory
 

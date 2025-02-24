@@ -4,12 +4,6 @@ import re
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
-
-    if type(old_nodes) != list:
-        raise ValueError("old_nodes argument must be a list")
-    
-    if len(old_nodes) == 0:
-        raise ValueError("old_nodes list is empty")
    
     allowed_delimiters = ["*", "**", "`"]
     if delimiter not in allowed_delimiters:
@@ -74,11 +68,6 @@ def find_md_images(text):
     return re.findall(md_image_pattern_with_title, text)
 
 def split_nodes_images(old_nodes):
-    if type(old_nodes) != list:
-        raise ValueError("argument must be a list")
-    
-    if len(old_nodes) == 0:
-        raise ValueError("argument is an empty list")
     
     new_nodes = []
 
@@ -175,17 +164,9 @@ def split_nodes_links(old_nodes):
     return new_nodes
 
 def text_to_textnodes(text):
-    if type(text) != str:
-        raise ValueError("argument must be a string")
-    
-    if text == "":
-        raise ValueError("argument must not be an empty string")
-
     node_list = [TextNode(text, TextType.TEXT)]
-    # print(node_list)
 
     parsed_for_bold = split_nodes_delimiter(node_list, "**", TextType.BOLD)
-    # print(bold)
     parsed_for_italic = split_nodes_delimiter(parsed_for_bold, "*", TextType.ITALIC)
     parsed_for_code = split_nodes_delimiter(parsed_for_italic, "`", TextType.CODE)
 

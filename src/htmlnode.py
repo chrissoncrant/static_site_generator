@@ -26,7 +26,17 @@ class HTMLNode():
         
 
     def to_html(self):
-        raise NotImplementedError
+        valid_tags = ["head", "meta", "title", "link", "script"]
+
+        if self.tag not in valid_tags:
+            raise NotImplementedError
+        else:
+            attributes = self.props_to_html()
+
+            if self.tag == "script":
+                return f"<{self.tag}{attributes}></{self.tag}>"
+            
+            return f"<{self.tag}{attributes} />"
     
     def props_to_html(self):                
         if self.props is None:
@@ -39,6 +49,10 @@ class HTMLNode():
         
         return f"{prop_string}"
     
+    def __eq__(self, other_node):
+            is_equal = self.tag == other_node.tag and self.value == other_node.value and self.children == other_node.children and self.props == other_node.props
+            return is_equal
+
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"
 
@@ -91,7 +105,10 @@ class ParentNode(HTMLNode):
             raise ValueError("Children argument must be a list")
 
     def to_html(self):
-        el_string = f"<{self.tag}{self.props_to_html()}>"
+        if self.tag == "html":
+            el_string = f"<!DOCTYPE html><{self.tag}{self.props_to_html()}>"
+        else:
+            el_string = f"<{self.tag}{self.props_to_html()}>"
         for i in range(len(self.children)):
                 child_el = self.children[i]
                 child_el_string = child_el.to_html()

@@ -13,19 +13,7 @@ def markdown_to_blocks(markdown):
 
     return block_list
 
-def solution_markdown_to_blocks(markdown):
-    blocks = markdown.split("\n\n")
-    filtered_blocks = []
-    for block in blocks:
-        if block == "":
-            continue
-        block = block.strip()
-        filtered_blocks.append(block)
-    return filtered_blocks
-
 def block_to_block_type(block):
-    if type(block) != str:
-        raise ValueError("argument must be a string")
     
     if block[0:3] == "```" and block[-3:] == "```":
         return "code"

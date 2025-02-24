@@ -6,23 +6,11 @@ from src.textnode import TextType, TextNode
 
 class TestSplitDelimiter(unittest.TestCase):
     def test_input_value_errors(self):
-        test_node = TextNode("I am text", "text")
-        
-        with self.assertRaises(ValueError) as invalid_input:
-            split_nodes_delimiter("", "**", TextType.BOLD)
-        self.assertEqual(str(invalid_input.exception), "old_nodes argument must be a list")       
-        
-        with self.assertRaises(ValueError) as invalid_input:
-            split_nodes_delimiter([], "**", TextType.BOLD)
-        self.assertEqual(str(invalid_input.exception), "old_nodes list is empty")       
+        test_node = TextNode("I am text", "text")           
         
         with self.assertRaises(ValueError) as invalid_input:
             split_nodes_delimiter([test_node], "/", TextType.TEXT)
-        self.assertEqual(str(invalid_input.exception), "invalid delimiter value: /. Only ['*', '**', '`'] delimiters can be used")       
-        
-        with self.assertRaises(ValueError) as invalid_input:
-            split_nodes_delimiter(["invalid data type"], "**", TextType.BOLD)
-        self.assertEqual(str(invalid_input.exception), "All items in old_node list must be instances of TextNode")       
+        self.assertEqual(str(invalid_input.exception), "invalid delimiter value: /. Only ['*', '**', '`'] delimiters can be used")            
         
         with self.assertRaises(ValueError) as invalid_input:
             split_nodes_delimiter([test_node], "*", TextType.BOLD)
@@ -107,16 +95,6 @@ class TestLinkAndImageMarkdownParse(unittest.TestCase):
 
 class TestImageSplit(unittest.TestCase):
     def test_input_errors(self):
-        with self.assertRaises(ValueError) as invalid_input:
-            split_nodes_images("")
-        self.assertEqual(str(invalid_input.
-        exception), "argument must be a list") 
-        
-        with self.assertRaises(ValueError) as invalid_input:
-            split_nodes_images([])
-        self.assertEqual(str(invalid_input.
-        exception), "argument is an empty list") 
-        
         with self.assertRaises(ValueError) as invalid_input:
             split_nodes_images([""])
         self.assertEqual(str(invalid_input.
@@ -270,14 +248,6 @@ class TestLinkSplit(unittest.TestCase):
         self.assertListEqual(result, [TextNode("I am code", TextType.CODE, None)])
 
 class TestFullInlineSplit(unittest.TestCase):
-    def test_input_errors(self):
-        with self.assertRaises(ValueError) as invalid_input:
-            text_to_textnodes([])
-        self.assertEqual(str(invalid_input.exception), "argument must be a string")   
-        
-        with self.assertRaises(ValueError) as invalid_input:
-            text_to_textnodes("")
-        self.assertEqual(str(invalid_input.exception), "argument must not be an empty string")
 
     def test_values(self):
         test_text = "**This** is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
