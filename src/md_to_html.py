@@ -134,6 +134,20 @@ def create_head_node():
     )
 
 #############################
+# EXTRACT TITLE FUNCTION
+#############################
+def extract_title(markdown):
+    if markdown.startswith("# ", 0, 2):
+        first_line = markdown.split("\n", 1)[0]
+
+        header_type, header = first_line.split(" ", 1)
+
+        if header_type == "#":
+            return header.strip()
+    else:
+        raise Exception("Heading 1 must be present on the first line")
+
+#############################
 # MAIN FUNCTION
 #############################
 def markdown_to_html_node(markdown, include_head=False):

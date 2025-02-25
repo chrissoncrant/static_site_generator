@@ -1,21 +1,13 @@
 import os
-from src.textnode import TextNode, TextType
+from src.dir_management import copy_from_static_to_public, delete_all_dir_contents
 
-SOURCE_PATH = "./static"
+STATIC_PATH = "./static"
 PUBLIC_PATH = "./public"
 
 def main():
     print("Main running...")
-
-    source_exists = os.path.exists(SOURCE_PATH)
-    public_exists = os.path.exists(PUBLIC_PATH)
-
-    if source_exists and public_exists:
-        print("they exist")
-        files_in_public = os.listdir(PUBLIC_PATH)
-
-        print(files_in_public)
-
+    delete_all_dir_contents(PUBLIC_PATH)
+    copy_from_static_to_public(STATIC_PATH, PUBLIC_PATH)
 
 
 if __name__ == "__main__":

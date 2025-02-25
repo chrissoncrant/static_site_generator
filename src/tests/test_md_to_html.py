@@ -1,7 +1,7 @@
 import unittest
 from src.htmlnode import LeafNode, ParentNode
 from src.textnode import TextNode
-from src.md_to_html import string_list_to_text_nodes, text_nodes_to_leaf_nodes, code_to_html, extract_list_text, list_to_html, heading_to_html, extract_quote, quote_to_html, paragraph_to_html, create_head_node, markdown_to_html_node
+from src.md_to_html import string_list_to_text_nodes, text_nodes_to_leaf_nodes, code_to_html, extract_list_text, list_to_html, heading_to_html, extract_quote, quote_to_html, paragraph_to_html, create_head_node, markdown_to_html_node, extract_title
 
 class TestHelperFunctions(unittest.TestCase):
     def test_exceptions(self):
@@ -94,6 +94,17 @@ class TestParagraphFunction(unittest.TestCase):
         correct_result = ParentNode("p", [LeafNode(None, "This is a paragraph of text.", None)], None)
 
         result = paragraph_to_html(p_md)
+        self.assertEqual(result, correct_result)
+
+class TestExtractTitleFunction(unittest.TestCase):
+    def test_invalid_input(self):
+        with self.assertRaises(Exception) as invalid_input:
+            extract_title("## Heading 2")
+        self.assertEqual(str(invalid_input.exception), "Heading 1 must be present on the first line")
+
+    def test_extract_title(self):
+        correct_result = "Heading 1"
+        result = extract_title("# Heading 1")
         self.assertEqual(result, correct_result)
 
 class TestMarkdownToHTMLNode(unittest.TestCase):
