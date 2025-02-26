@@ -16,7 +16,7 @@ def delete_all_dir_contents(path):
         print(f"Creating directory at {path}")
         os.mkdir(path)
     
-def copy_from_static_to_public(source, dest, show_success_message=0):
+def copy_directory(source, dest, show_success_message=0):
     if show_success_message == 0:
         show_message = {"main": False, "sub": False}
     if show_success_message == 1:
@@ -27,6 +27,7 @@ def copy_from_static_to_public(source, dest, show_success_message=0):
 
     if source_exists:
         path_list = os.listdir(source)
+        # print(path_list)
 
         if len(path_list) == 0:
             return
@@ -38,12 +39,14 @@ def copy_from_static_to_public(source, dest, show_success_message=0):
             if os.path.isfile(source_path):
                 shutil.copy(source_path, destination_path)
             else:
-                os.mkdir(destination_path)
-                if show_message["sub"]:
-                    copy_from_static_to_public(source_path, destination_path, 2)
+                if os.path.exists(destination_path):
+                    delete_all_dir_contents(destination_path)
                 else:
-                    copy_from_static_to_public(source_path, destination_path)
-        
+                    os.mkdir(destination_path)
+                if show_message["sub"]:
+                    copy_directory(source_path, destination_path, 2)
+                else:
+                    copy_directory(source_path, destination_path)  
     else:
         raise Exception(f"source directory at {source} doesn't exist at the path")
     

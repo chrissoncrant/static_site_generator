@@ -6,7 +6,6 @@ from src.inline_markdown import text_to_textnodes
 #############################
 # GENERAL HELPER FUNCTIONS
 #############################
-
 def string_list_to_text_nodes(string_list):
     if type(string_list) != list:
         raise TypeError(f"Argument is of type '{type(string_list).__name__}', but must be a list.")
@@ -83,8 +82,6 @@ def heading_to_html(heading_block):
 #############################
 # QUOTE FUNCTION
 #############################
-quote_md = "> quoting some stuff.\n>And this is a new line."
-
 def extract_quote(quote_block):
     split = quote_block.split(">")
     filtered = filter(lambda x: x != "", split)
@@ -150,6 +147,57 @@ def extract_title(markdown):
 #############################
 # MAIN FUNCTION
 #############################
+# def markdown_to_html_node(markdown, include_head=False):
+#     if type(include_head) != bool:
+#         raise TypeError(f"'include_head' argument is of type '{type(include_head).__name__}', but must be a boolean.")
+#     body_child_list = []
+
+#     block_list = markdown_to_blocks(markdown)
+#     # print("block_lists", block_list)
+
+#     for block in block_list:
+#         block_type = block_to_block_type(block)
+#         # print("block_type", block_type)
+
+#         match block_type:
+#             case "heading":
+#                 heading_html = heading_to_html(block)
+#                 body_child_list.append(heading_html)
+
+#             case "unordered_list":
+#                 li_nodes = list_to_html(block)
+#                 ul_parent = ParentNode("ul", li_nodes)
+#                 body_child_list.append(ul_parent)
+            
+#             case "ordered_list":
+#                 li_nodes = list_to_html(block)
+#                 ul_parent = ParentNode("ol", li_nodes)
+#                 body_child_list.append(ul_parent)
+
+#             case "code":
+#                 code_node = code_to_html(block)
+#                 body_child_list.append(code_node)
+
+#             case "quote":
+#                 quote_node = quote_to_html(block)
+#                 body_child_list.append(quote_node)
+
+#             case "paragraph":
+#                 p_node = paragraph_to_html(block)
+#                 body_child_list.append(p_node)
+
+#     # body_node = ParentNode("body", body_child_list)
+#     article_node = ParentNode("article", body_child_list)
+
+#     return ParentNode("body", [article_node])
+
+#     # if include_head:
+#     #     head_node = create_head_node()
+
+#     #     return ParentNode('html', [head_node, body_node])
+#     # else:
+#     #     return ParentNode('html', [body_node])
+
 def markdown_to_html_node(markdown, include_head=False):
     if type(include_head) != bool:
         raise TypeError(f"'include_head' argument is of type '{type(include_head).__name__}', but must be a boolean.")
@@ -189,11 +237,4 @@ def markdown_to_html_node(markdown, include_head=False):
                 p_node = paragraph_to_html(block)
                 body_child_list.append(p_node)
 
-    body_node = ParentNode("body", body_child_list)
-
-    if include_head:
-        head_node = create_head_node()
-
-        return ParentNode('html', [head_node, body_node])
-    else:
-        return ParentNode('html', [body_node])
+    return ParentNode("html", body_child_list)

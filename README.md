@@ -135,27 +135,48 @@ Append ParentNode to the child_list
 
 return ParentNode("html", child_list)
 
-### Directory Manipulation
-- Copy contents from source directory, "static", into "public" directory
-    - first, verify both directories exist
-    - Recursivley:
-        - delete all files in "static" directory
-        - copy files from public into "static"
+### Page Generation
+Print message: f"Generating page from {from_path} to {dest_path} using {template_path}"
 
-Recursive Function for Deleting content of public:
-- check if the current item at the path is a file or directory
-- If file: delete
-- If directory: remove the whole directory
+Open and read markdown file from from_path and store the contents in a variable
 
-Copying Files:
-- verify the source path exists
-- if it exists, get the list of all the files adn directories
-- check if public exists
-- if public doesn't exist, create it
-- if public does exist:
-    - clear public directory
-    - iterate through all paths in static
-    - store the current parent directory name.
-    - if item at path is a file copy it over to public using the parent directory
-    - if item is a directory, run the copy files using the current parent directory
+Open and read html file in temp_path and store the contents
+
+Convert the markdown to html (md_to_html) and store the html string.
+
+Extract the title and store it
+
+Replace {{title}} in the template with the title
+
+replace the {{content}} with the converted string
+
+Write the new file html page to a file at dest_path and create any new necessary directories if they don't exist in the dest_path
+
+Converting the contents of the markdown file in Content directory into html and using the template.html to create a new file that will be in the Public directory.
+
+#########
+Content may have several files within it and a nested directory.
+
+If the directory doesn't exist in the destination folder (Public), they need to be created first.
+
+But, we don't want to create the 'content' folder.
+
+### Main Function
+delete files from public dir
+copy all files from static to public
+generate the page from content/index.md using template.html and write it to public/index.html
+
+If all files are deleted from Public, then copied from Static to Public first, then all the images must be added to Static first, and all nested html files need to have the appropriate link to the styles.
+
+This would need to be changed in the Template.
+
+Another thing... creating the 
+
+Next phase would be to create a recursive call on generate_page.
+
+
+
+
+
+
 

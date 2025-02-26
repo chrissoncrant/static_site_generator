@@ -105,10 +105,11 @@ class ParentNode(HTMLNode):
             raise ValueError("Children argument must be a list")
 
     def to_html(self):
-        if self.tag == "html":
-            el_string = f"<!DOCTYPE html><{self.tag}{self.props_to_html()}>"
-        else:
-            el_string = f"<{self.tag}{self.props_to_html()}>"
+        el_string = f"<{self.tag}{self.props_to_html()}>"
+        # if self.tag == "html":
+        #     el_string = f"<!DOCTYPE html><{self.tag}{self.props_to_html()}>"
+        # else:
+        #     el_string = f"<{self.tag}{self.props_to_html()}>"
         for i in range(len(self.children)):
                 child_el = self.children[i]
                 child_el_string = child_el.to_html()
