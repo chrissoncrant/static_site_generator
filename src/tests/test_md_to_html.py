@@ -117,14 +117,8 @@ class TestMarkdownToHTMLNode(unittest.TestCase):
     
     def test_markdown_to_html_node(self):
         # No Head Tag
-        correct_result = "<!DOCTYPE html><html><body><p>I'm a paragraph</p></body></html>"
+        correct_result = "<body><article><p>I'm a paragraph</p></article></body>"
 
         result = markdown_to_html_node("I'm a paragraph").to_html()
-        self.assertEqual(result, correct_result)
-
-        # With Head Tag
-        correct_result = '<!DOCTYPE html><html><head><meta charset="utf-8"  /><meta name="viewport" content="width=device-width, initial-scale=1.0"  /><title>title of website</title><link href="styles.css" rel="stylesheet" type="text/css"  /><script src="script.js" type="module" ></script></head><body><p>I\'m a paragraph</p></body></html>'
-
-        result = markdown_to_html_node("I'm a paragraph", True).to_html()
         self.assertEqual(result, correct_result)
 

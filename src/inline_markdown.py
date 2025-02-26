@@ -1,6 +1,7 @@
 from src.textnode import TextNode, TextType
-
+from src.paths import STATIC_PATH, PUBLIC_PATH, CONTENT_PATH
 import re
+import os
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
@@ -93,6 +94,7 @@ def split_nodes_images(old_nodes):
 
             split = node_text.split(f"![{alt_text}]({url})", 1)
 
+            # Removes titles from images
             if url.find('"') != -1:
                 url = url.split(' "')[0]
             
@@ -103,7 +105,7 @@ def split_nodes_images(old_nodes):
                 text_node = TextNode(split[0], TextType.TEXT)
                 new_nodes.append(text_node)
 
-            image_node = TextNode(alt_text, TextType.IMAGE, url)
+            image_node = TextNode(alt_text, TextType.IMAGE, f"[? {url} ?]")
             new_nodes.append(image_node)
 
             if i == len(image_data) - 1:

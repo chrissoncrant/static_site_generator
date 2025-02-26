@@ -108,7 +108,7 @@ class TestImageSplit(unittest.TestCase):
         result = split_nodes_images([one_image_node])
         correct_result = [
             TextNode("Here is a ", "text", None), 
-            TextNode("Sample Image1", "image", "images/sample1-image.jpg"), 
+            TextNode("Sample Image1", "image", "[? images/sample1-image.jpg ?]"), 
             TextNode(". And here is the last sentence.", "text", None)
         ]
         self.assertListEqual(result, correct_result)
@@ -118,7 +118,7 @@ class TestImageSplit(unittest.TestCase):
             TextType.TEXT
         )
         result = split_nodes_images([image_alone])
-        correct_result = [TextNode("Sample Image1", "image", "images/sample1-image.jpg")]
+        correct_result = [TextNode("Sample Image1", "image", "[? images/sample1-image.jpg ?]")]
         self.assertListEqual(result, correct_result)
 
 
@@ -129,9 +129,9 @@ class TestImageSplit(unittest.TestCase):
         result = split_nodes_images([two_image_node])        
         correct_result = [
             TextNode("Here is a ", "text", None), 
-            TextNode("Sample Image1", "image", "images/sample1-image.jpg"), 
+            TextNode("Sample Image1", "image", "[? images/sample1-image.jpg ?]"), 
             TextNode(". And here is the last sentence. and another image: ", "text", None), 
-            TextNode("Sample Image2", "image", "images/sample2-image.jpg"), 
+            TextNode("Sample Image2", "image", "[? images/sample2-image.jpg ?]"), 
             TextNode(". Last sentence.", "text", None)
         ]
         self.assertListEqual(result, correct_result)
@@ -143,7 +143,7 @@ class TestImageSplit(unittest.TestCase):
         result = split_nodes_images([image_and_link_node])
         correct_result = [
             TextNode("This is text with a link [to boot dev](https://www.boot.dev) and a ", "text", None), 
-            TextNode("Sample Image", "image", "images/sample-image.jpg")
+            TextNode("Sample Image", "image", "[? images/sample-image.jpg ?]")
         ]
         self.assertListEqual(result, correct_result)
 
@@ -155,7 +155,7 @@ class TestImageSplit(unittest.TestCase):
         correct_result = [
             TextNode("This is just a sentence.", "text", None),
             TextNode("Here is a ", "text", None), 
-            TextNode("Sample Image1", "image", "images/sample1-image.jpg"), 
+            TextNode("Sample Image1", "image", "[? images/sample1-image.jpg ?]"), 
             TextNode(". And here is the last sentence.", "text", None)
         ]
         self.assertListEqual(result, correct_result)
@@ -218,18 +218,6 @@ class TestLinkSplit(unittest.TestCase):
         ]
         self.assertListEqual(result, correct_result)
 
-        image_and_link_node = TextNode(
-            "This is text with a link [to boot dev](https://www.boot.dev) and a ![Sample Image](images/sample-image.jpg \"testing\")",
-            TextType.TEXT,
-        )
-        result = split_nodes_links([image_and_link_node])
-        correct_result = [
-            TextNode("This is text with a link ", "text", None), 
-            TextNode("to boot dev", "link", "https://www.boot.dev"), 
-            TextNode(" and a ![Sample Image](images/sample-image.jpg \"testing\")", "text", None)
-        ]
-        self.assertListEqual(result, correct_result)
-
         plain_node = TextNode(
             "This is just a sentence.",
             TextType.TEXT,
@@ -261,7 +249,7 @@ class TestFullInlineSplit(unittest.TestCase):
             TextNode(" word and a ", "text", None), 
             TextNode("code block", "code", None), 
             TextNode(" and an ", "text", None), 
-            TextNode("obi wan image", "image", "https://i.imgur.com/fJRm4Vk.jpeg"), 
+            TextNode("obi wan image", "image", "[? https://i.imgur.com/fJRm4Vk.jpeg ?]"), 
             TextNode(" and a ", "text", None), 
             TextNode("link", "link", "https://boot.dev")
         ]

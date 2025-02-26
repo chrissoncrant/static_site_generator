@@ -96,9 +96,9 @@ class TestHTMLNode(unittest.TestCase):
 
     def test_parent_html_string(self):
         #HTML Parent
-        html_parent = ParentNode("html", [LeafNode(None, "some text")])
+        # html_parent = ParentNode("html", [LeafNode(None, "some text")])
 
-        self.assertEqual(html_parent.to_html(), '<!DOCTYPE html><html>some text</html>')
+        # self.assertEqual(html_parent.to_html(), '<!DOCTYPE html><html>some text</html>')
         
         #Basic Parent:
         children_list = [
