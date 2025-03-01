@@ -19,17 +19,14 @@ def create_rel_path_string(path_of_file, file_name):
         
         return nest + file_name
 
-def replace_image_links(html_string, des_path):
+def replace_image_links(html_string, des_path, folder_name="images"):
     link_pattern = r"\[\? (.*?) \?\]"
 
     links = re.findall(link_pattern, html_string)
 
     for link in links:
-        print("link", link)
-
         file_name = os.path.basename(link)
-        print(file_name)
-        image_path = f"images/{file_name}"
+        image_path = f"{folder_name}/{file_name}"
         correct_path = create_rel_path_string(des_path, image_path)
 
         pattern_to_replace = f"[? {link} ?]"
