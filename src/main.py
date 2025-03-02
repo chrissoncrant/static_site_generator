@@ -1,6 +1,6 @@
 from src.dir_management import copy_directory, delete_all_dir_contents
-from src.generate_pages import generate_page, generate_pages
-from src.paths import STATIC_PATH, PUBLIC_PATH, CONTENT_PATH
+from src.generate_pages import generate_pages
+from src.paths import STATIC_PATH, PUBLIC_PATH, DOCS_PATH
 import sys
 
 def main():
@@ -13,13 +13,23 @@ def main():
 
     print("basepath", basepath)
 
-    delete_all_dir_contents(PUBLIC_PATH)
+    if basepath == "/":
+        destination_path = PUBLIC_PATH
+    else:
+        destination_path = DOCS_PATH
+
+    delete_all_dir_contents(destination_path)
 
     # copy_directory("./content/images", "./static/images")
 
-    copy_directory(STATIC_PATH, PUBLIC_PATH)
+    copy_directory(STATIC_PATH, destination_path)
 
-    generate_pages("content", "docs", basepath)
+    if destination_path == PUBLIC_PATH:
+        des = "public"
+    else:
+        des = "docs"
+
+    generate_pages("content", des, basepath)
 
 if __name__ == "__main__":
     main()
