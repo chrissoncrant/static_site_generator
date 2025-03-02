@@ -10,11 +10,11 @@ class TestSplitDelimiter(unittest.TestCase):
         
         with self.assertRaises(ValueError) as invalid_input:
             split_nodes_delimiter([test_node], "/", TextType.TEXT)
-        self.assertEqual(str(invalid_input.exception), "invalid delimiter value: /. Only ['*', '**', '`'] delimiters can be used")            
+        self.assertEqual(str(invalid_input.exception), "invalid delimiter value: /. Only ['_', '**', '`'] delimiters can be used")            
         
         with self.assertRaises(ValueError) as invalid_input:
-            split_nodes_delimiter([test_node], "*", TextType.BOLD)
-        self.assertEqual(str(invalid_input.exception), "delimiter * does not match the text_type TextType.BOLD provided")       
+            split_nodes_delimiter([test_node], "_", TextType.BOLD)
+        self.assertEqual(str(invalid_input.exception), "delimiter _ does not match the text_type TextType.BOLD provided")       
 
     def test_splitting(self):
         test_plain = TextNode("plain text, no delimiters", TextType.TEXT)
@@ -22,7 +22,7 @@ class TestSplitDelimiter(unittest.TestCase):
         test_lone_word = TextNode("**bold**", TextType.TEXT)
         test_bold = TextNode("Testing node with **bold section** in the middle.", TextType.TEXT)
         test_multiple_bold = TextNode("Testing node with **bold section** in the middle. And **another bold** section.", TextType.TEXT)
-        test_italic = TextNode("Testing node with *italic section* in the middle.", TextType.TEXT)
+        test_italic = TextNode("Testing node with _italic section_ in the middle.", TextType.TEXT)
         test_code = TextNode("Testing node with `code section` in the middle.", TextType.TEXT)
 
         plain_result = split_nodes_delimiter([test_plain], "**", TextType.BOLD)
@@ -51,7 +51,7 @@ class TestSplitDelimiter(unittest.TestCase):
         ]
         self.assertListEqual(correct_multi_bold_result, multi_bold_result)
 
-        italic_result = split_nodes_delimiter([test_italic], "*", "italic")
+        italic_result = split_nodes_delimiter([test_italic], "_", "italic")
         correct_italic_result = [
             TextNode("Testing node with ", "text", None), 
             TextNode("italic section", "italic", None), 
@@ -238,7 +238,7 @@ class TestLinkSplit(unittest.TestCase):
 class TestFullInlineSplit(unittest.TestCase):
 
     def test_values(self):
-        test_text = "**This** is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        test_text = "**This** is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
         result = text_to_textnodes(test_text)
         correct_result = [
             TextNode("This", "bold", None), 

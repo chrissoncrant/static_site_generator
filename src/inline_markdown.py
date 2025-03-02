@@ -6,7 +6,7 @@ import os
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
    
-    allowed_delimiters = ["*", "**", "`"]
+    allowed_delimiters = ["_", "**", "`"]
     if delimiter not in allowed_delimiters:
         raise ValueError(f"invalid delimiter value: {delimiter}. Only {allowed_delimiters} delimiters can be used")
 
@@ -20,7 +20,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
     delimiter_text_type_correlation = {
         "**": TextType.BOLD,
-        "*": TextType.ITALIC,
+        "_": TextType.ITALIC,
         "`": TextType.CODE
     }
 
@@ -169,7 +169,7 @@ def text_to_textnodes(text):
     node_list = [TextNode(text, TextType.TEXT)]
 
     parsed_for_bold = split_nodes_delimiter(node_list, "**", TextType.BOLD)
-    parsed_for_italic = split_nodes_delimiter(parsed_for_bold, "*", TextType.ITALIC)
+    parsed_for_italic = split_nodes_delimiter(parsed_for_bold, "_", TextType.ITALIC)
     parsed_for_code = split_nodes_delimiter(parsed_for_italic, "`", TextType.CODE)
 
     parsed_for_images = split_nodes_images(parsed_for_code)

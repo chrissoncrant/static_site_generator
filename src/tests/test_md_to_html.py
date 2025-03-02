@@ -21,7 +21,7 @@ class TestHelperFunctions(unittest.TestCase):
         exception), "Argument's items must be instances of TextNodes")
 
     def test_outputs(self):
-        test_list = ["String of *text*"]
+        test_list = ["String of _text_"]
         correct_result = [[TextNode("String of ", "text", None), TextNode("text", "italic", None)]]
         result = string_list_to_text_nodes(test_list)
         self.assertListEqual(result, correct_result)
