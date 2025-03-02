@@ -13,13 +13,13 @@ def main():
 
     print("basepath", basepath)
 
-    # delete_all_dir_contents(PUBLIC_PATH)
+    delete_all_dir_contents(PUBLIC_PATH)
 
     # copy_directory("./content/images", "./static/images")
 
-    # copy_directory(STATIC_PATH, PUBLIC_PATH)
+    copy_directory(STATIC_PATH, PUBLIC_PATH)
 
-    # generate_pages("content", "public", basepath)
+    generate_pages("content", "public", basepath)
 
 if __name__ == "__main__":
     main()

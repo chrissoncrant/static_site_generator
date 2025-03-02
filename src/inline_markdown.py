@@ -105,7 +105,7 @@ def split_nodes_images(old_nodes):
                 text_node = TextNode(split[0], TextType.TEXT)
                 new_nodes.append(text_node)
 
-            image_node = TextNode(alt_text, TextType.IMAGE, f"[? {url} ?]")
+            image_node = TextNode(alt_text, TextType.IMAGE, f"{url}")
             new_nodes.append(image_node)
 
             if i == len(image_data) - 1:
