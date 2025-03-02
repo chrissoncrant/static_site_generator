@@ -78,7 +78,7 @@ def generate_page(from_path, template_path, des_path):
     with open(des_path, "w") as f:
         f.write(html_page)
 
-def generate_pages(source_path, des_path, basepath):
+def generate_pages(source_path, des_path):
     # print(source_path, des_path)
     source_exists = os.path.exists(source_path)
     if source_exists:
@@ -94,11 +94,11 @@ def generate_pages(source_path, des_path, basepath):
                 # print(item_path)
                 new_des_path = item_path.replace(source_path, des_path).replace('md', 'html')
                 # print(new_des_path)
-                generate_page(item_path, "template.html", new_des_path, basepath)
+                generate_page(item_path, "template.html", new_des_path)
             else:
                 # print("directory")
                 # print(item_path)
                 new_des_path = item_path.replace(source_path, des_path)
                 # print(new_des_path)
-                generate_pages(item_path, new_des_path, basepath)
+                generate_pages(item_path, new_des_path)
                 # print("###########")
