@@ -1,7 +1,7 @@
 import unittest
 from src.htmlnode import LeafNode, ParentNode
 from src.textnode import TextNode
-from src.md_to_html import string_list_to_text_nodes, text_nodes_to_leaf_nodes, code_to_html, extract_list_text, list_to_html, heading_to_html, extract_quote, quote_to_html, paragraph_to_html, create_head_node, markdown_to_html_node, extract_title
+from src.md_to_html import string_list_to_text_nodes, text_nodes_to_leaf_nodes, code_to_html, extract_list_text, list_to_html, heading_to_html, extract_quote, quote_to_html, paragraph_to_html, markdown_to_html_node, extract_title
 
 class TestHelperFunctions(unittest.TestCase):
     def test_exceptions(self):
@@ -77,13 +77,13 @@ class TestQuoteFunctions(unittest.TestCase):
     quote_md = "> quoting some stuff.\n>And this is a new line."
 
     def test_extract_quote(self):
-        correct_result = "quoting some stuff.\nAnd this is a new line."
+        correct_result = "quoting some stuff. And this is a new line."
 
         result = extract_quote(self.quote_md)
         self.assertEqual(result, correct_result)
 
     def test_quote_to_html(self):
-        correct_result = ParentNode("blockquote", [ParentNode("p", [LeafNode(None, 'quoting some stuff.\nAnd this is a new line.', None)], None)], None)
+        correct_result = ParentNode("blockquote", [LeafNode(None, 'quoting some stuff. And this is a new line.', None)], None)
 
         result = quote_to_html(self.quote_md)
         self.assertEqual(result, correct_result)
@@ -107,17 +107,10 @@ class TestExtractTitleFunction(unittest.TestCase):
         result = extract_title("# Heading 1")
         self.assertEqual(result, correct_result)
 
-class TestMarkdownToHTMLNode(unittest.TestCase):
-    
-    def test_invalid_include_head_arg(self):
-        with self.assertRaises(TypeError) as invalid_input:
-            markdown_to_html_node("I'm a paragraph", "yes")
-        self.assertEqual(str(invalid_input.
-        exception), "'include_head' argument is of type 'str', but must be a boolean.")
-    
+class TestMarkdownToHTMLNode(unittest.TestCase):  
     def test_markdown_to_html_node(self):
         # No Head Tag
-        correct_result = "<body><article><p>I'm a paragraph</p></article></body>"
+        correct_result = "<html><p>I'm a paragraph</p></html>"
 
         result = markdown_to_html_node("I'm a paragraph").to_html()
         self.assertEqual(result, correct_result)

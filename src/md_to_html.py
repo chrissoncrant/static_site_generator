@@ -128,9 +128,7 @@ def extract_title(markdown):
 #############################
 # MAIN FUNCTION
 #############################
-def markdown_to_html_node(markdown, include_head=False):
-    if type(include_head) != bool:
-        raise TypeError(f"'include_head' argument is of type '{type(include_head).__name__}', but must be a boolean.")
+def markdown_to_html_node(markdown):
     body_child_list = []
 
     block_list = markdown_to_blocks(markdown)
@@ -166,5 +164,5 @@ def markdown_to_html_node(markdown, include_head=False):
             case "paragraph":
                 p_node = paragraph_to_html(block)
                 body_child_list.append(p_node)
-
+    
     return ParentNode("html", body_child_list)
