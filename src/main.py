@@ -7,19 +7,19 @@ def main():
     print("Main running...")
 
     print(sys.argv)
-    basepath = "./"
+    basepath = "/"
     if len(sys.argv) > 1:
         basepath = sys.argv[1]
 
     print("basepath", basepath)
 
-    delete_all_dir_contents(PUBLIC_PATH)
+    # delete_all_dir_contents(PUBLIC_PATH)
 
     # copy_directory("./content/images", "./static/images")
 
-    copy_directory(STATIC_PATH, PUBLIC_PATH)
+    # copy_directory(STATIC_PATH, PUBLIC_PATH)
 
-    generate_pages("content", "public", basepath)
+    # generate_pages("content", "public", basepath)
 
 if __name__ == "__main__":
     main()

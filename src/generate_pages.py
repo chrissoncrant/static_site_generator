@@ -69,13 +69,16 @@ def generate_page(from_path, template_path, des_path, basepath):
     title = extract_title(content)
     # print(title)
 
-    styles_link = create_rel_path_string(des_path, "index.css")
+    # styles_link = create_rel_path_string(des_path, "index.css")
 
-    html_page = template.replace("{{ Title }}", title).replace("{{ Content }}", html_string).replace("{{ Styles Link }}", styles_link)
+    # html_page = template.replace("{{ Title }}", title).replace("{{ Content }}", html_string).replace("{{ Styles Link }}", styles_link)
+    
+    html_page = template.replace("{{ Title }}", title).replace("{{ Content }}", html_string)
 
-    html_page = replace_image_links(html_page, des_path)
 
-    html_page = html_page.replace('src="./', f'src="{basepath}')
+    # html_page = replace_image_links(html_page, des_path)
+
+    html_page = html_page.replace('src="/', f'src="{basepath}')
 
     html_page = html_page.replace('href="/', f'href="{basepath}')
     # print(html_page)
