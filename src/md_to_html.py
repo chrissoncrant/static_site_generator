@@ -82,56 +82,56 @@ def heading_to_html(heading_block):
 #############################
 # QUOTE FUNCTION
 #############################
-def extract_quote(quote_block):
-    split = quote_block.split(">")
-    def strip_leading_space(lines):
-        new_list = []
+# def extract_quote(quote_block):
+#     split = quote_block.split(">")
+#     def strip_leading_space(lines):
+#         new_list = []
         
-        for line in lines:
-            if line == "":
-                continue
-            if line.startswith(" "):
-                stripped = line.lstrip()
-                new_list.append(stripped)
-            else:
-                new_list.append(line)
+#         for line in lines:
+#             if line == "":
+#                 continue
+#             if line.startswith(" "):
+#                 stripped = line.lstrip()
+#                 new_list.append(stripped)
+#             else:
+#                 new_list.append(line)
 
-        return new_list
+#         return new_list
     
-    cleaned = strip_leading_space(split)
-    return "".join(cleaned)
+#     cleaned = strip_leading_space(split)
+#     return "".join(cleaned)
 
-def quote_to_html(quote_block):
-    extracted = extract_quote(quote_block)
-    text_nodes = text_to_textnodes(extracted)
-    leaf_nodes = text_nodes_to_leaf_nodes(text_nodes)
-    p_parent = ParentNode("p", leaf_nodes)
-    blockquote_parent = ParentNode("blockquote", [p_parent])
-    # blockquote_parent = ParentNode("blockquote", leaf_nodes)
-    return blockquote_parent
+# def quote_to_html(quote_block):
+#     extracted = extract_quote(quote_block)
+#     text_nodes = text_to_textnodes(extracted)
+#     leaf_nodes = text_nodes_to_leaf_nodes(text_nodes)
+#     p_parent = ParentNode("p", leaf_nodes)
+#     blockquote_parent = ParentNode("blockquote", [p_parent])
+#     # blockquote_parent = ParentNode("blockquote", leaf_nodes)
+#     return blockquote_parent
 
 #####################
 # Quote function used for passing the test
 #####################
-# def extract_quote(block):
-#     lines = block.split("\n")
-#     new_lines = []
-#     for line in lines:
-#         if not line.startswith(">"):
-#             raise ValueError("invalid quote block")
-#         new_lines.append(line.lstrip(">").strip())
-#     print("new_lines", new_lines)
-#     content = " ".join(new_lines)
-#     print("content", content)
-#     return content
+def extract_quote(block):
+    lines = block.split("\n")
+    new_lines = []
+    for line in lines:
+        if not line.startswith(">"):
+            raise ValueError("invalid quote block")
+        new_lines.append(line.lstrip(">").strip())
+    # print("new_lines", new_lines)
+    content = " ".join(new_lines)
+    # print("content", content)
+    return content
 
-# def quote_to_html(quote_block):
-#     extracted = extract_quote(quote_block)
-#     # print("extracted", f"${extracted}$")
-#     text_nodes = text_to_textnodes(extracted)
-#     leaf_nodes = text_nodes_to_leaf_nodes(text_nodes)
-#     blockquote_parent = ParentNode("blockquote", leaf_nodes)
-#     return blockquote_parent
+def quote_to_html(quote_block):
+    extracted = extract_quote(quote_block)
+    # print("extracted", f"${extracted}$")
+    text_nodes = text_to_textnodes(extracted)
+    leaf_nodes = text_nodes_to_leaf_nodes(text_nodes)
+    blockquote_parent = ParentNode("blockquote", leaf_nodes)
+    return blockquote_parent
 
 #############################
 # PARAGRAPH FUNCTION
@@ -184,60 +184,6 @@ def extract_title(markdown):
 #############################
 # MAIN FUNCTION
 #############################
-def markdown_to_html_node(markdown, include_head=False):
-    if type(include_head) != bool:
-        raise TypeError(f"'include_head' argument is of type '{type(include_head).__name__}', but must be a boolean.")
-    body_child_list = []
-
-    block_list = markdown_to_blocks(markdown)
-    # print("block_lists", block_list)
-
-    for block in block_list:
-        block_type = block_to_block_type(block)
-        # print("block_type", block_type)
-
-        match block_type:
-            case "heading":
-                heading_html = heading_to_html(block)
-                body_child_list.append(heading_html)
-
-            case "unordered_list":
-                li_nodes = list_to_html(block)
-                ul_parent = ParentNode("ul", li_nodes)
-                body_child_list.append(ul_parent)
-            
-            case "ordered_list":
-                li_nodes = list_to_html(block)
-                ul_parent = ParentNode("ol", li_nodes)
-                body_child_list.append(ul_parent)
-
-            case "code":
-                code_node = code_to_html(block)
-                body_child_list.append(code_node)
-
-            case "quote":
-                quote_node = quote_to_html(block)
-                body_child_list.append(quote_node)
-
-            case "paragraph":
-                p_node = paragraph_to_html(block)
-                body_child_list.append(p_node)
-
-    # body_node = ParentNode("body", body_child_list)
-    article_node = ParentNode("article", body_child_list)
-
-    return ParentNode("body", [article_node])
-
-    # if include_head:
-    #     head_node = create_head_node()
-
-    #     return ParentNode('html', [head_node, body_node])
-    # else:
-    #     return ParentNode('html', [body_node])
-
-#############
-# Code to pass the specific tests for the course
-#############
 # def markdown_to_html_node(markdown, include_head=False):
 #     if type(include_head) != bool:
 #         raise TypeError(f"'include_head' argument is of type '{type(include_head).__name__}', but must be a boolean.")
@@ -277,4 +223,58 @@ def markdown_to_html_node(markdown, include_head=False):
 #                 p_node = paragraph_to_html(block)
 #                 body_child_list.append(p_node)
 
-#     return ParentNode("html", body_child_list)
+#     # body_node = ParentNode("body", body_child_list)
+#     article_node = ParentNode("article", body_child_list)
+
+#     return ParentNode("body", [article_node])
+
+    # if include_head:
+    #     head_node = create_head_node()
+
+    #     return ParentNode('html', [head_node, body_node])
+    # else:
+    #     return ParentNode('html', [body_node])
+
+#############
+# Code to pass the specific tests for the course
+#############
+def markdown_to_html_node(markdown, include_head=False):
+    if type(include_head) != bool:
+        raise TypeError(f"'include_head' argument is of type '{type(include_head).__name__}', but must be a boolean.")
+    body_child_list = []
+
+    block_list = markdown_to_blocks(markdown)
+    # print("block_lists", block_list)
+
+    for block in block_list:
+        block_type = block_to_block_type(block)
+        # print("block_type", block_type)
+
+        match block_type:
+            case "heading":
+                heading_html = heading_to_html(block)
+                body_child_list.append(heading_html)
+
+            case "unordered_list":
+                li_nodes = list_to_html(block)
+                ul_parent = ParentNode("ul", li_nodes)
+                body_child_list.append(ul_parent)
+            
+            case "ordered_list":
+                li_nodes = list_to_html(block)
+                ul_parent = ParentNode("ol", li_nodes)
+                body_child_list.append(ul_parent)
+
+            case "code":
+                code_node = code_to_html(block)
+                body_child_list.append(code_node)
+
+            case "quote":
+                quote_node = quote_to_html(block)
+                body_child_list.append(quote_node)
+
+            case "paragraph":
+                p_node = paragraph_to_html(block)
+                body_child_list.append(p_node)
+
+    return ParentNode("html", body_child_list)

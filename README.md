@@ -11,6 +11,14 @@
 -   Our static site generator will take a directory of Markdown files (one for
     each web page), and build a directory of HTML files.
 
+## In order to pass course tests:
+The Course is very nit-picky; I did things differently, so in order to pass tests I need to:
+- Update the template.html to be the same as template_for_course
+- In md_to_html: Uncomment the markdown_to_html_node function and comment out mine
+- Also in md_to_html: Uncomment the blockquote functions and comment out mine
+- Change any italics from the '_' to '*' in any files.
+
+
 ### Flow
 -   Markdown files are in the /content directory. A template.html file is in the
     root of the project

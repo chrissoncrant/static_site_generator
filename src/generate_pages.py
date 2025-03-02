@@ -1,6 +1,7 @@
 import os
 import re
 from src.md_to_html import extract_title, markdown_to_html_node
+from src.paths import STATIC_PATH, CONTENT_PATH, PUBLIC_PATH
 
 def create_rel_path_string(path_of_file, file_name):
         if "/" not in path_of_file:
@@ -19,10 +20,11 @@ def create_rel_path_string(path_of_file, file_name):
         
         return nest + file_name
 
-def replace_image_links(html_string, des_path, folder_name="images"):
+def replace_image_links(html_string, des_path,folder_name="images"):
     link_pattern = r"\[\? (.*?) \?\]"
 
     links = re.findall(link_pattern, html_string)
+
 
     for link in links:
         file_name = os.path.basename(link)
@@ -35,7 +37,7 @@ def replace_image_links(html_string, des_path, folder_name="images"):
 
     return html_string
 
-def generate_page(from_path, template_path, des_path):
+def generate_page(from_path, template_path, des_path, basepath):
     print(f"Generating page from '{from_path}' to '{des_path}' using '{template_path}'")
 
     content_exists = os.path.exists(from_path)
@@ -64,7 +66,6 @@ def generate_page(from_path, template_path, des_path):
     html_string = markdown_to_html_node(content).to_html()
     # print(html_string)
 
-    
     title = extract_title(content)
     # print(title)
 
@@ -73,10 +74,41 @@ def generate_page(from_path, template_path, des_path):
     html_page = template.replace("{{ Title }}", title).replace("{{ Content }}", html_string).replace("{{ Styles Link }}", styles_link)
 
     html_page = replace_image_links(html_page, des_path)
+
+    html_page = html_page.replace('src="./', f'src="{basepath}')
+
+    html_page = html_page.replace('href="/', f'href="{basepath}')
     # print(html_page)
 
     with open(des_path, "w") as f:
         f.write(html_page)
 
-def generate_pages(source_path, dest_path):
-    pass
+def generate_pages(source_path, des_path, basepath):
+    # print(source_path, des_path)
+    source_exists = os.path.exists(source_path)
+    if source_exists:
+        source_list = os.listdir(source_path)
+        # print("source list", source_list)
+
+        for item in source_list:
+            # print("##########")
+            item_path = os.path.join(source_path, item)
+            if os.path.isfile(item_path):
+                # print("file")
+                # print(item)
+                # print(item_path)
+                new_des_path = item_path.replace(source_path, des_path).replace('md', 'html')
+                # print(new_des_path)
+                generate_page(item_path, "template.html", new_des_path, basepath)
+            else:
+                # print("directory")
+                # print(item_path)
+                new_des_path = item_path.replace(source_path, des_path)
+                # print(new_des_path)
+                generate_pages(item_path, new_des_path, basepath)
+                # print("###########")
+
+
+
+
+
