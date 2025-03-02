@@ -1,6 +1,6 @@
 # Tolkien Fan Club
 
-![JRR Tolkien sitting](./images/tolkienprofile.png)
+![JRR Tolkien sitting](/images/tolkienprofile.png)
 
 Here's the deal, **I like Tolkien**.
 
