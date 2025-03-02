@@ -5,6 +5,4 @@ venv/
 .env/
 .venv/
 
-public/
-
 .vscode

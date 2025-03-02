@@ -19,7 +19,7 @@ def main():
 
     copy_directory(STATIC_PATH, PUBLIC_PATH)
 
-    generate_pages("content", "public", basepath)
+    generate_pages("content", "docs", basepath)
 
 if __name__ == "__main__":
     main()
